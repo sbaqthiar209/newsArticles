@@ -1,0 +1,38 @@
+// Breakpoints
+$screen-md-min: 768px;
+$screen-lg-min: 992px;
+$screen-xl-min: 1280px;
+
+@use "sass:math";
+
+@mixin md {
+  // min-width: 768px
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+// Large devices
+@mixin lg {
+  // min-width: 992px
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+// Extra large devices
+@mixin xl {
+  // min-width: 1280px
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+$baseFont: 16;
+
+@function rem($pxWidths) {
+  $remValues: null;
+
+  @each $pxValue in $pxWidths {
+    $remValues: append($remValues, math.div($pxValue, $baseFont) + rem);
+  }
+  @return $remValues;
+}

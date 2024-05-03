@@ -1,0 +1,219 @@
+@import "../../utils/mixins.scss";
+
+.homeContainer {
+    position: relative;
+
+    .homeHeaderContainer {
+        position: absolute;
+        top: rem(24);
+        z-index: 3;
+        width: 100%;
+    }
+
+    .imageContainer {
+        width: 100%;
+        height: auto;
+        max-height: 100vh;
+        object-fit: contain;
+        position: relative;
+        overflow: hidden;
+
+        .overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            // background-color: black;
+            // opacity: 0.5;
+            z-index: 2;
+            height: 100%;
+            width: 100%;
+            background: rgba(34, 38, 41, 0.85);
+            color: white;
+            // padding: 36;
+
+            // @include md{
+            //     padding: 36;
+            // }
+            h3 {
+                font-size: rem(36);
+
+                @include md {
+                    font-size: rem(48);
+                }
+            }
+
+            p {
+                font-size: rem(14);
+
+                @include md {
+                    font-size: rem(16);
+                }
+            }
+        }
+    }
+
+    .pageSection {
+        background-color: #1E1E1E;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-bottom: rem(100);
+
+        @include md {
+            padding-bottom: 0;
+        }
+
+        .keyServices {
+            width: 75%;
+            max-width: rem(1441);
+            // max-height: 817;
+            // height:60vw;
+            background-color: black;
+            border-radius: rem(24);
+            padding: rem(79);
+            margin-top: -10vw;
+            z-index: 2;
+
+            .textContainer {
+                color: white;
+                margin-bottom: rem(48);
+            }
+
+            .iconsContainer {
+                color: white;
+                display: flex;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+                column-gap: 5vw;
+                row-gap: rem(16);
+                margin-top: rem(24);
+
+                .iconHolder {
+                    // height: 165;
+                    // width: 165;
+                    cursor: pointer;
+                    // scale:0.5;
+                    // height: rem(80);
+                    width: rem(80);
+
+                    @include md {
+                        // height: rem(165);
+                        width: rem(140);
+                    }
+
+                    @include xl {
+                        width: rem(165);
+                    }
+
+                    .icon {
+                        // height: rem(165);
+                        // width: rem(165);
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border: rem(2) solid #87C232;
+                        margin-bottom: rem(16);
+                        height: rem(80);
+                        width: rem(80);
+
+                        @include md {
+                            height: rem(140);
+                            width: rem(140);
+                        }
+
+                        @include xl {
+                            width: rem(165);
+                        }
+
+                        svg {
+                            scale: 0.5;
+
+                            @include md {
+                                scale: 0.8;
+                            }
+
+                            @include xl {
+                                scale: 1;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        .whyChoose {
+            width: 80%;
+            max-width: rem(1441);
+            max-height: rem(817);
+            // height:60vw;
+            // background-color: black;
+            // border-radius: 24;
+            padding: rem(65) rem(0);
+
+            .textContainer {
+                color: white;
+            }
+
+            .iconsContainer {
+                display: flex;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+                column-gap: rem(8);
+                row-gap: rem(100);
+                width: 100%;
+
+                @include md {
+                    flex-wrap: nowrap;
+
+                    &>div:first-child {
+                        border-top-left-radius: rem(24);
+                        border-bottom-left-radius: rem(24);
+                    }
+
+                    &>div:last-child {
+                        border-top-right-radius: rem(24);
+                        border-bottom-right-radius: rem(24);
+                    }
+                }
+
+                .dotCard {
+                    width: 20%;
+                    max-width: rem(227);
+                    // height:20vw;
+                    padding: rem(24);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: white;
+                    position: relative;
+
+                    .dot {
+                        height: rem(73);
+                        width: rem(73);
+                        border-radius: 50%;
+                        background-color: #87C232;
+                        // margin-top: -60;
+                        position: absolute;
+                        top: rem(-40);
+                    }
+
+                    .text {
+                        padding-top: rem(32);
+                    }
+
+                    .link {
+                        padding-top: rem(16);
+                    }
+                }
+            }
+        }
+    }
+}
