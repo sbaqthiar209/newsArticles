@@ -7,7 +7,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  SwipeableDrawer,
+  Drawer,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -126,15 +126,15 @@ const Header = () => {
                 </Typography>
                 <Box sx={{ height: "40px", width: "40px" }}></Box>
               </Box>
-              <SwipeableDrawer
+              <Drawer
                 anchor={"left"}
                 open={showMobileMenu}
                 onClose={() => setShowMobileMenu(false)}
-                onOpen={() => setShowMobileMenu(true)}
+                // onOpen={() => setShowMobileMenu(true)}
                 disableScrollLock={true}
               >
                 {list()}
-              </SwipeableDrawer>
+              </Drawer>
             </>
           )}
         </Box>
