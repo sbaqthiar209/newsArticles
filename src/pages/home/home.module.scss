@@ -2,6 +2,12 @@
 
 .homeContainer {
     position: relative;
+    margin: 0 auto;
+    background-color: #222629;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 
     .homeHeaderContainer {
         position: absolute;
@@ -52,15 +58,21 @@
     }
 
     .pageSection {
-        background-color: #1E1E1E;
+        // background-color: #1E1E1E;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
         padding-bottom: rem(100);
+        margin-top: rem(-100);
+        // position: absolute;
+        // top:rem(-100);
+        width: 100%;
+        max-width: rem(1280);
 
         @include md {
             padding-bottom: 0;
+            width: 75%;
         }
 
         .keyServices {
@@ -73,6 +85,7 @@
             padding: rem(79);
             // margin-top: -10vw;
             z-index: 2;
+            text-align: center;
 
             .textContainer {
                 color: white;
@@ -163,6 +176,7 @@
                 column-gap: rem(8);
                 row-gap: rem(100);
                 width: 100%;
+                text-align: center;
 
                 @include md {
                     flex-wrap: nowrap;

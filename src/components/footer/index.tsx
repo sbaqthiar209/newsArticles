@@ -13,8 +13,7 @@ import Instagram from "../../assets/images/svg/Instagram";
 import Facebook from "../../assets/images/svg/Facebook";
 import LogoWhite from "../../assets/images/svg/LogoWhite";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
 
 const Footer = () => {
   const [signupOpen, setSignupOpen] = React.useState<boolean>(false);
@@ -31,22 +30,19 @@ const Footer = () => {
   };
   const handleRegisterClick = async () => {
     try {
-        const response = await axios.post(
-          "https://api.restful-api.dev/objects",
-          {
-            email: email,
-            password: password,
-            contactNumber: contact,
-          }
-        );
-        if (response.status === 200) {
+      const response = await axios.post("https://api.restful-api.dev/objects", {
+        email: email,
+        password: password,
+        contactNumber: contact,
+      });
+      if (response.status === 200) {
         setShowSuccess(true);
-          setToastMessage(`Registered Successfully`);
-        setSignupOpen(false)
-        } else {
-          setToastMessage(`Registration Failed`);
-        }
-        setShowSuccess(true);
+        setToastMessage(`Registered Successfully`);
+        setSignupOpen(false);
+      } else {
+        setToastMessage(`Registration Failed`);
+      }
+      setShowSuccess(true);
     } catch (error) {
       console.log("Error in post api", error);
       setToastMessage(`Registration Failed`);
@@ -106,7 +102,7 @@ const Footer = () => {
         {
           accessor: "signup",
           label: "Sign up",
-          onLinkClick:()=>setSignupOpen(true),
+          onLinkClick: () => setSignupOpen(true),
         },
         {
           accessor: "customer",
@@ -125,10 +121,10 @@ const Footer = () => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "100vw",
-    maxWidth:500,
+    maxWidth: 500,
     bgcolor: "background.paper",
     boxShadow: 24,
-    p: "48px",
+    padding: "48px",
     borderRadius: "25px",
   };
   return (
@@ -153,9 +149,16 @@ const Footer = () => {
                   <Box key={uuidv4()} className={styles.column}>
                     {column.options.map((item) => {
                       return (
-                        <Typography key={uuidv4()} variant="body1" sx={{cursor:"pointer"}} onClick={()=>{
-                          item.onLinkClick && typeof item.onLinkClick ==="function" && item.onLinkClick()
-                        }}>
+                        <Typography
+                          key={uuidv4()}
+                          variant="body1"
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            item.onLinkClick &&
+                              typeof item.onLinkClick === "function" &&
+                              item.onLinkClick();
+                          }}
+                        >
                           {item.label}
                         </Typography>
                       );
@@ -180,69 +183,74 @@ const Footer = () => {
           </Box>
         </Box>
         <Modal open={signupOpen} onClose={updateSignupOpen}>
-          <Box
-            className={styles.modalContainer}
-            sx={style}
-          >
-            <Typography variant="h6" component="h2" sx={{ mb: "16px" }}>
-              Signup
-            </Typography>
-            <Box sx={{ mb: "16px" }}>
-              <Typography variant="body1" sx={{ mb: "8px" }}>
-                Email
+          <Box className={styles.modalContainer} sx={style}>
+            <Box sx={{p:"36px"}}>
+              <Typography variant="h6" component="h2" sx={{ mb: "16px" }}>
+                Signup
               </Typography>
-              <TextField
-                fullWidth
-                type="email"
-                size="small"
-                value={email}
-                helperText="john.doe@yahoo.com"
-                error={email === ""}
-                onChange={(e) => setEmail(e.target.value ?? "")}
-                // data-testid={"email_test_id"}
-                inputProps={{"data-testid":"email_test_id"}}
-              />
-            </Box>
-            <Box sx={{ mb: "16px" }}>
-              <Typography variant="body1" sx={{ mb: "8px" }}>
-                Password
-              </Typography>
-              <TextField
-                fullWidth
-                type="password"
-                size="small"
-                value={password}
-                onChange={(e) => setPassword(e.target.value ?? "")}
-                inputProps={{"data-testid":"pwd_test_id"}}
-              />
-            </Box>
-            <Box sx={{ mb: "16px" }}>
-              <Typography variant="body1" sx={{ mb: "8px" }}>
-                Contact Number
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                type={"text"}
-                value={contact}
-                onChange={(e) => setContact(e.target.value ?? "")}
-                inputProps={{"data-testid":"contact_test_id"}}
-
-              />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "16px",
-                mt: "32px",
-                width: "100%",
-              }}
-            >
-              <Button variant="outlined"  onClick={() => setSignupOpen(false)}>Cancel</Button>
-              <Button variant="contained" onClick={() => handleRegisterClick()} data-testid={"register_button"}>
-                Register
-              </Button>
+              <Box sx={{ mb: "16px" }}>
+                <Typography variant="body1" sx={{ mb: "8px" }}>
+                  Email
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="email"
+                  size="small"
+                  value={email}
+                  helperText="john.doe@yahoo.com"
+                  error={email === ""}
+                  onChange={(e) => setEmail(e.target.value ?? "")}
+                  // data-testid={"email_test_id"}
+                  inputProps={{ "data-testid": "email_test_id" }}
+                />
+              </Box>
+              <Box sx={{ mb: "16px" }}>
+                <Typography variant="body1" sx={{ mb: "8px" }}>
+                  Password
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="password"
+                  size="small"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value ?? "")}
+                  inputProps={{ "data-testid": "pwd_test_id" }}
+                />
+              </Box>
+              <Box sx={{ mb: "16px" }}>
+                <Typography variant="body1" sx={{ mb: "8px" }}>
+                  Contact Number
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type={"text"}
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value ?? "")}
+                  inputProps={{ "data-testid": "contact_test_id" }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "16px",
+                  mt: "32px",
+                  width: "100%",
+                }}
+              >
+                <Button variant="outlined" sx={{borderColor:"#222629", color:"#222629"}} onClick={() => setSignupOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleRegisterClick()}
+                  data-testid={"register_button"}
+                  sx={{background:"#87C232"}}
+                >
+                  Register
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Modal>
