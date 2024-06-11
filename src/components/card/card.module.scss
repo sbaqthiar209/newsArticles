@@ -1,0 +1,66 @@
+@import "../../utils/mixins.scss";
+
+.cardContainer {
+    width: 100%;
+    height: rem(220);
+    border-bottom: 1px solid #777;
+    padding-bottom: rem(28);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: rem(28);
+
+    .imageTitleContainer {
+        width: 100%;
+        height: rem(72);
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: rem(20);
+
+        .imageHolder {
+            height: rem(72);
+            width: rem(90);
+            border-radius: rem(8);
+            overflow: hidden;
+
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .titleHolder {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            .top{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .bottom{
+                font-size: rem(16);
+                line-height: rem(26);
+        text-overflow: ellipsis;
+        font-weight: 700;
+        width: 100%;
+            }
+        }
+    }
+
+    .description {
+        width: 100%;
+        text-overflow: ellipsis;
+    }
+
+    .author {
+        width: 100%;
+
+    }
+}

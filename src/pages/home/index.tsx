@@ -1,166 +1,206 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Checkbox, Typography } from "@mui/material";
 import styles from "./home.module.scss";
-import Banner from "../../assets/images/banner.png";
-import { v4 as uuidv4 } from 'uuid';
-import { lazy, Suspense } from 'react';
-
-const Header = lazy(()=>import("../../components/header"));
-const TeamBuilding = lazy(()=>import("../../assets/images/svg/teamBuilding"));
-const OfficeSetup = lazy(()=>import("../../assets/images/svg/OfficeSetup"));
-const Leadership = lazy(()=>import("../../assets/images/svg/Leadership"));
-const Branding = lazy(()=>import("../../assets/images/svg/Branding"));
-const ExtendedTeam = lazy(()=>import("../../assets/images/svg/ExtendedTeam"));
-const Recruitment = lazy(()=>import("../../assets/images/svg/Recruitment"));
-const Payroll = lazy(()=>import("../../assets/images/svg/Payroll"));
-const Consultancy = lazy(()=>import("../../assets/images/svg/Consultancy"));
-
-const Footer = lazy(()=>import("../../components/footer"));
+import {useState, useEffect } from "react";
+import axios from "axios";
+import Card from "../../components/card";
+export interface CardsDataModel {
+  title: string;
+  url: string;
+  image: string;
+  date: string;
+  body: string;
+  source: string;
+  author: string;
+}
+interface FilterModel {
+  selected: boolean;
+  filterValue: string;
+}
+type SortModel = FilterModel;
 
 const Home = () => {
-  const iconData = [
+  const [cardsDisplayed, setCardsDisplayed] = useState<CardsDataModel[]>([]);
+  const [cardsData, setCardsData] = useState<CardsDataModel[]>([]);
+  const [categoryFilters, setCategoryFilters] = useState<FilterModel[]>([]);
+  const [authorFilters, setAuthorFilters] = useState<FilterModel[]>([]);
+  const [sortFilter, setSortFilter] = useState<SortModel[]>([
     {
-      label: "Team Building",
-      icon: <TeamBuilding />,
+      selected:false,
+      filterValue:"Date"
     },
     {
-      label: "Office Setup",
-      icon: <OfficeSetup />,
-    },
-    {
-      label: "Leadership Hiring",
-      icon: <Leadership />,
-    },
-    {
-      label: "Branding & Advertising",
-      icon: <Branding />,
-    },
-    {
-      label: "Extended Team Setup",
-      icon: <ExtendedTeam />,
-    },
-    {
-      label: "Recruitment Services",
-      icon: <Recruitment />,
-    },
-    {
-      label: "Payroll Management",
-      icon: <Payroll />,
-    },
-    {
-      label: "Consultancy Services",
-      icon: <Consultancy />,
-    },
-  ];
-  const dotCardsData = [
-    {
-      label: "Expert Team with Industry Experience",
-      link: "More",
-    },
-    {
-      label: "Solutions for Every Business Size",
-      link: "More",
-    },
-    {
-      label: "Cost-Effective Strategies",
-      link: "More",
-    },
-    {
-      label: "Scalanle Services for Future Growth",
-      link: "More",
-    },
-  ];
+      selected:false,
+      filterValue:"Title"
+    }
+  ]);
+
+
+  const fetchPageData = async () => {
+    const response = await axios.get(
+      "https://dev-storm-rest-api.pantheonsite.io/api/v1/news"
+    );
+    if (Array.isArray(response?.data) && response?.data?.length > 0) {
+      setCardsDisplayed(response?.data as CardsDataModel[]);
+      setCardsData(response?.data as CardsDataModel[]);
+      setCategoryFilters(
+        Array.from(new Set(response?.data?.map((item) => item.source))).map(
+          (item) => ({ selected: true, filterValue: item } as FilterModel)
+        )
+      );
+      setAuthorFilters(
+        Array.from(new Set(response?.data?.map((item) => item.author))).map(
+          (item) => ({ selected: true, filterValue: item } as FilterModel)
+        )
+      );
+    }
+  };
+  useEffect(() => {
+    fetchPageData();
+  }, []);
+  const updateCategoryFilter = (newValue:boolean,position:number)=>{
+    setCategoryFilters(categoryFilters.map((item,i)=>{
+      return i===position ? {...item,selected:newValue} : item
+    }))
+  }
+  const updateAuthorFilter = (newValue:boolean,position:number)=>{
+    setAuthorFilters(authorFilters.map((item,i)=>{
+      return i===position ? {...item,selected:newValue} : item
+    }))
+  }
+  const updateSortFilter = (newValue:boolean,position:number)=>{
+    setSortFilter(sortFilter.map((item,i)=>{
+      return {...item, selected: position===i ? true:false}
+    }))
+  }
+  const sortAsPerDate = ()=>{
+    const newValues = cardsDisplayed.sort((a,b)=>(new Date(b.date).getTime() - new Date(a.date).getTime()));
+    console.log("sorted--",newValues)
+    setCardsDisplayed(newValues);
+  }
+  const sortAsPerTitle = ()=>{
+    const newValues = cardsDisplayed.sort(function(a, b){
+      var nameA = a.title.toLowerCase(), nameB = b.title.toLowerCase();
+      if (nameA < nameB)
+       return -1;
+      if (nameA > nameB)
+       return 1;
+      return 0; 
+     });
+
+    console.log("sorted--",newValues)
+    setCardsDisplayed(newValues);
+  }
+  useEffect(()=>{
+    const sortBy = sortFilter.find(item=>item.selected)?.filterValue
+    if(sortBy==="Date"){
+      sortAsPerDate()
+    }
+    else {
+      sortAsPerTitle()
+    }
+  },[sortFilter])
+  useEffect(()=>{
+    let allFilteredResults = cardsData;
+   if(categoryFilters){
+    const selectedFilters = categoryFilters.filter(filter=>filter.selected===true);
+    const filteredDisplayList = allFilteredResults.filter(card=>{
+      return selectedFilters.some(item=>card?.source.includes(item.filterValue))
+    })
+    if(filteredDisplayList && filteredDisplayList.length>0){
+        allFilteredResults = filteredDisplayList;
+    }
+   }
+   if(authorFilters){
+    const selectedFilters = authorFilters.filter(filter=>filter.selected===true);
+    const filteredDisplayList = allFilteredResults.filter(card=>{
+      return selectedFilters.some(item=>card?.author.includes(item.filterValue))
+    })
+    if(filteredDisplayList && filteredDisplayList.length>0){
+      setCardsDisplayed(filteredDisplayList)
+    }
+   }
+  },[categoryFilters,authorFilters])
   return (
     <>
       <Box className={styles.homeContainer}>
-        <Box className={styles.homeHeaderContainer}>
-          <Header />
-        </Box>
-        <Box className={styles.imageContainer}>
-          <img src={Banner} loading="lazy" alt="banner" data-testid={"home-banner"} width={1920} height={984.004}/>
-          <Box className={styles.overlay}>
-            <Typography
-              variant="h3"
-              sx={{ mb: "16px", fontWeight: 700 }}
-            >
-              Empowering Your Business Growth
+        <Box className={styles.filterPanel}>
+          <Box className={styles.filterCategory}>
+            <Typography variant="body1" fontWeight={"700"}>
+              Category
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: "16px", fontWeight: 700 }}
-            >
-              Unlocking Potential Through Exceptional Services
+            <Box className={styles.test}>
+                {
+                  categoryFilters && categoryFilters?.map((filter,i)=>{
+                    return (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        p={"0px 20px"}
+                        key={i}
+                      >
+                        <Checkbox size="small" checked={filter.selected} onChange={(e)=>updateCategoryFilter(e.target.checked, i)}/>
+                        <Typography variant="body1">{filter.filterValue}</Typography>
+                      </Box>
+                    );
+                  })
+                }
+            </Box>
+          </Box>
+          <Box className={styles.filterAuthor}>
+            <Typography variant="body1" fontWeight={"700"}>
+              Author
             </Typography>
-            <Button variant="contained" sx={{background:"#87C232", color:"black", borderRadius:"25px", pl:"36px", pr:"36px"}} size="large">Know more</Button>
-          </Box>
-        </Box>
-        <Box className={styles.pageSection}>
-          <Box className={styles.keyServices}>
-            <Box className={styles.textContainer}>
-              <Typography variant="h4" sx={{ mb: "16px", fontWeight: 700 }}>
-                Key Services
-              </Typography>
-              <Typography variant="body1">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-              </Typography>
-            </Box>
-            <Box className={styles.iconsContainer}>
-              {iconData.map((item, ind) => {
-                return (
-                  <Box className={styles.iconHolder} key={uuidv4()}>
-                    <Box className={styles.icon}>{item.icon}</Box>
-                    <Box className={styles.text}>
-                      <Typography variant="body1">{item.label}</Typography>
-                    </Box>
-                  </Box>
-                );
-              })}
+            <Box className={styles.test}>
+                {
+                  authorFilters && authorFilters?.map((filter,i)=>{
+                    return (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        p={"0px 20px"}
+                        key={i}
+                      >
+                        <Checkbox size="small" checked={filter.selected} onChange={(e)=>updateAuthorFilter(e.target.checked, i)}/>
+                        <Typography variant="body1">{filter.filterValue}</Typography>
+                      </Box>
+                    );
+                  })
+                }
             </Box>
           </Box>
-          <Box className={styles.whyChoose}>
-            <Box className={styles.textContainer}>
-              <Typography
-                variant="h4"
-                sx={{ mb: "16px", fontWeight: 700, color: "#87C232" }}
-              >
-                Why Choose ABD Solutions
-              </Typography>
-              <Typography variant="body1">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting.
-              </Typography>
-            </Box>
-            <Box sx={{ height: "100px" }}></Box>
-            <Box className={styles.iconsContainer}>
-              {dotCardsData.map((item, ind) => {
-                return (
-                    <Box className={styles.dotCard} key={uuidv4()}>
-                      <Box className={styles.dot}></Box>
-                      <Typography variant="body1" className={styles.text}>
-                        {item.label}
-                      </Typography>
-                      <Link className={styles.link} href="#">
-                        {item.link}
-                      </Link>
-                    </Box>
-                );
-              })}
+          <Box className={styles.filterAuthor}>
+            <Typography variant="body1" fontWeight={"700"}>
+              SortBy
+            </Typography>
+            <Box className={styles.test}>
+                {
+                  sortFilter.map((filter,i)=>{
+                    return (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        p={"0px 20px"}
+                        key={i}
+                      >
+                        <Checkbox size="small" checked={filter.selected} onChange={(e)=>updateSortFilter(e.target.checked, i)}/>
+                        <Typography variant="body1">{filter.filterValue}</Typography>
+                      </Box>
+                    );
+                  })
+                }
             </Box>
           </Box>
         </Box>
-        <Footer />
+        <Box className={styles.cardsPanel}>
+          {cardsDisplayed &&
+            cardsDisplayed?.length > 0 &&
+            cardsDisplayed.map((item, i) => {
+              return <Card cardKey={i} {...item} />;
+            })}
+        </Box>
       </Box>
     </>
   );
